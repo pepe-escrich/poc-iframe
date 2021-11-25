@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <title>Ventana padre</title>
+</head>
+
+<body>
+
+    <h1>Ventana padre</h1>
+    <p><button id="boton">Enviar hola al iframe</button></p>
+    <p>Mensaje recibido del Iframe:</p>
+    <div id="resultado"></div>
+    <br />
+
+    <!-- FIX aqui poner la ruta local o la url donde se despliegue el iframe -->
+    <iframe id="el-iframe" src="file:///D:/ws_github/poc-iframe/iframe.html"
+        style="width:500px; height: 300px;"></iframe>
+
+    <script>
+        // addEventListener support for IE8
+        function bindEvent(element, eventName, eventHandler) {
+            if (element.addEventListener) {
+                element.addEventListener(eventName, eventHandler, false);
+            } else if (element.attachEvent) {
+                element.attachEvent('on' + eventName, eventHandler);
+            }
+        }
+
+
+        var iframeEl = document.getElementById('el-iframe'),
+            messageButton = document.getElementById('boton'),
+            results = document.getElementById('resultado');
+
+
+        // función para enviar mensaje al iframe
+        var sendMessage = function (msg) {
+            iframeEl.contentWindow.postMessage(msg, '*');
+        };
+
+        // Enviar hola en cada click con un random
+        bindEvent(messageButton, 'click', function (e) {
+            var random = Math.random();
+            sendMessage('Hola !! ' + random);
+        });
+
+        // Escuchar los mensajes del iframe y ponerlos en el div
+        bindEvent(window, 'message', function (e) {
+            results.innerHTML = e.data;
+        });
+    </script>
+</body>
+
+</html>

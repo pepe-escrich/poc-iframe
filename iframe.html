@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <title>Ventana hija</title>
+    <style>
+        body {
+            background-color: #ffde49;
+            color: black;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Hola, soy un iframe</h1>
+    <p> <button id="boton">Enviar hola a la ventana padre</button></p>
+    <p>Mensaje recibido de la ventana padre:</p>
+    <div id="resultado"></div>
+
+    <script>
+        // addEventListener support for IE8
+        function bindEvent(element, eventName, eventHandler) {
+            if (element.addEventListener) {
+                element.addEventListener(eventName, eventHandler, false);
+            } else if (element.attachEvent) {
+                element.attachEvent('on' + eventName, eventHandler);
+            }
+        }
+
+        // función para enviar mensaje al padre
+        var sendMessage = function (msg) {
+            window.parent.postMessage(msg, '*');
+        };
+
+        var results = document.getElementById('resultado'),
+            messageButton = document.getElementById('boton');
+
+        // Enviar hola en cada click con un random
+        bindEvent(messageButton, 'click', function (e) {
+            var random = Math.random();
+            sendMessage('Hola !! ' + random);
+        });
+
+        // Escuchar los mensajes del padre y ponerlos en el div
+        bindEvent(window, 'message', function (e) {
+            results.innerHTML = e.data;
+        });
+    </script>
+</body>
+
+</html>
